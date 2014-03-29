@@ -19,6 +19,8 @@ Feature:
 - Search images and insert to content
 - Change title and size before insert
 
+Note: To have full version with other feature as "Save to Media Library" and "Set featured image", please go to http://gis.wplove.me
+
 == Installation ==
 
 1. Unzip the google-images-search-and-insert.zip
