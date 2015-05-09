@@ -1,9 +1,9 @@
 === Google Images Search And Insert ===
 Contributors: baby2j
-Donate link: http://gis.wplove.me
+Donate link: http://dunghv.com
 Tags: google images, google search, wordpress google images
 Requires at least: 2.8.0
-Tested up to: 4.0.1 
+Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -19,7 +19,7 @@ Feature:
 - Search images and insert to content
 - Change title and size before insert
 
-Note: To have full version with other feature as "Save to Media Library" and "Set featured image", please go to http://gis.wplove.me
+Note: To have full version with other feature as "Save to Media Library" and "Set featured image", please go to http://dunghv.com
 
 == Installation ==
 
@@ -39,7 +39,7 @@ Note: To have full version with other feature as "Save to Media Library" and "Se
 
 = Need support? =
 
-Visit [plugin documentation website](http://gis.wplove.me "plugin documentation")
+Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
 
