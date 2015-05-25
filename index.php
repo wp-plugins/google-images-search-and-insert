@@ -21,7 +21,7 @@ function vgis_enqueue($hook) {
 add_action('admin_enqueue_scripts', 'vgis_enqueue');
 
 function add_vgis_button($context) {
-    $context = '<a href="#vgis_popup" id="vgis-btn" class="button add_media" title="Google Image"><span class="wp-media-buttons-icon"></span> Google Image</a><input type="hidden" id="vgis_featured_url" name="vgis_featured_url" value="" />';
+    $context = '<a href="#vgis_popup" id="vgis-btn" class="button add_media" title="Google Images"><span class="wp-media-buttons-icon"></span> Google Images</a><input type="hidden" id="vgis_featured_url" name="vgis_featured_url" value="" />';
     return $context;
 }
 

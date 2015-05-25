@@ -1,8 +1,8 @@
 === Google Images Search And Insert ===
 Contributors: baby2j
 Donate link: http://dunghv.com
-Tags: google images, google search, wordpress google images
-Requires at least: 2.8.0
+Tags: google images, google search, wordpress google images, google library, google images api
+Requires at least: 3.5
 Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2 or later
@@ -30,10 +30,10 @@ Note: To have full version with other feature as "Save to Media Library" and "Se
 
 == Screenshots ==
 
-1. `/assets/screenshot-1.jpg`
-2. `/assets/screenshot-2.jpg`
-3. `/assets/screenshot-3.jpg`
-4. `/assets/screenshot-4.jpg`
+1. "Google Images Library" button
+1. Search images with powerfull options
+1. User searched image with many purposes
+1. Enjoy
 
 == Frequently Asked Questions ==
 
