@@ -1,11 +1,11 @@
 <?php
 /*
   Plugin Name: Google Images Search And Insert
-  Plugin URI: http://wplove.me
-  Description: This plugin help you search images on internet (powered by Google Images API) and insert to content very quickly.
-  Version: 1.0.1
+  Plugin URI: http://dunghv.com
+  Description: This plugin help you search images on internet (powered by Google Images API) and insert to content or set featured image very quickly.
+  Version: 1.0.2
   Author: Baby2j
-  Author URI: http://codecanyon.net/user/baby2j
+  Author URI: http://dunghv.com
  */
 
 add_action('media_buttons_context', 'add_vgis_button');
@@ -146,7 +146,9 @@ function add_inline_popup_content() {
                 Title: <input type="text" id="vgis-title" size="42" value=""><br/><br/>
                 Width: <input type="text" id="vgis-width" size="8" value="0"> x Height: <input type="text" id="vgis-height" size="8" value="0"><br/><br/>
                 <input type="hidden" id="vgis-url" value="">
-                <input type="button" id="vgisinsert" class="button button-primary" value="Insert into post">
+                <input type="button" id="vgisinsert" class="button button-primary" value="Insert">
+                <a href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgisave" class="button button-disabled" value="Save & Insert"></a>
+                <a href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgifeatured" class="button button-disabled" value="Set Featured Image"></a>
             </div>
         </div>
     </div>
@@ -156,7 +158,7 @@ function add_inline_popup_content() {
             var scrollPos = txtarea.scrollTop;
             var strPos = 0;
             var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ?
-                "ff" : (document.selection ? "ie" : false));
+                    "ff" : (document.selection ? "ie" : false));
             if (br == "ie") {
                 txtarea.focus();
                 var range = document.selection.createRange();
@@ -193,8 +195,8 @@ function add_inline_popup_content() {
             vShowImages(jQuery(this).attr("rel") - 1);
         });
         jQuery("#vgisinsert").live("click", function() {
-            if(jQuery('#vgis-url').val() != '') {
-                vinsert = '<img src="'+jQuery('#vgis-url').val()+'" width="'+jQuery('#vgis-width').val()+'" height="'+jQuery('#vgis-height').val()+'" title="'+jQuery('#vgis-title').val()+'" alt="'+jQuery('#vgis-title').val()+'"/>';
+            if (jQuery('#vgis-url').val() != '') {
+                vinsert = '<img src="' + jQuery('#vgis-url').val() + '" width="' + jQuery('#vgis-width').val() + '" height="' + jQuery('#vgis-height').val() + '" title="' + jQuery('#vgis-title').val() + '" alt="' + jQuery('#vgis-title').val() + '"/>';
                 if (!tinyMCE.activeEditor || tinyMCE.activeEditor.isHidden()) {
                     insertAtCaret('content', vinsert);
                 } else {
@@ -209,7 +211,7 @@ function add_inline_popup_content() {
             vffurl = jQuery('#vgis-url').val();
             jQuery('#vgis_featured_url').val(vffurl);
             jQuery('#postimagediv div.inside img').remove();
-            jQuery('#postimagediv div.inside').prepend('<img src="'+vffurl+'" width="270"/>');
+            jQuery('#postimagediv div.inside').prepend('<img src="' + vffurl + '" width="270"/>');
             jQuery.colorbox.close();
         });
         jQuery("#remove-post-thumbnail").live("click", function() {
@@ -224,7 +226,7 @@ function add_inline_popup_content() {
             jQuery('#vgis-view').html('<img src="' + jQuery(this).attr('vgistburl') + '"/>');
         });
         function vShowImages(page) {
-            if(jQuery("#vgisinput").val() == '') {
+            if (jQuery("#vgisinput").val() == '') {
                 alert('Please enter keyword to search!');
             } else {
                 jQuery('#vgisspinner').show();
@@ -239,7 +241,7 @@ function add_inline_popup_content() {
                     url: vurl,
                     dataType: "jsonp",
                     success: function(data) {
-                        if(data.responseDetails === null) {
+                        if (data.responseDetails === null) {
                             jQuery('#vgisspinner').hide();
                             for (var i = 0; i < data.responseData.results.length; i++) {
                                 jQuery('#vgis-container').append('<div class="vgis-item"><div class="vgis-item-link"><a href="' + data.responseData.results[i].url + '" target="_blank" title="View this image in new windows">View</a><a class="vgis-item-use" vgistburl="' + data.responseData.results[i].tbUrl + '" vgisurl="' + data.responseData.results[i].url + '" vgisthumb="' + data.responseData.results[i].tbUrl + '" vgistitle="' + data.responseData.results[i].titleNoFormatting + '" vgiswidth="' + data.responseData.results[i].width + '" vgisheight="' + data.responseData.results[i].height + '" href="#">Use this image</a></div><div class="vgis-item-overlay"></div><img src="' + data.responseData.results[i].tbUrl + '"><span>' + data.responseData.results[i].width + ' x ' + data.responseData.results[i].height + '</span></div> ');

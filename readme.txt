@@ -8,18 +8,18 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin help you search images on internet (powered by Google Images API) and insert to content very quickly.
+This plugin help you search images on internet (powered by Google Images API) and insert to content or set featured image very quickly.
 
 == Description ==
 
-This plugin help you search images on internet (powered by Google Images API) and insert to content very quickly.
+This plugin help you search images on internet (powered by Google Images API) and insert to content or set featured image very quickly.
 
 Feature:
 
 - Search images and insert to content
 - Change title and size before insert
 
-Note: To have full version with other feature as "Save to Media Library" and "Set featured image", please go to http://dunghv.com
+Note: To have full version with other feature as "Save to Media Library" and "Set Featured Image", please go to http://dunghv.com
 
 == Installation ==
 
@@ -43,5 +43,8 @@ Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.2 =
+* Compatible up to WordPress 4.2.2
+
+= 1.0.1 =
 * Google Images Search And Insert plugin released
