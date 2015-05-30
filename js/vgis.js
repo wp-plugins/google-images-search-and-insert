@@ -38,7 +38,7 @@ function vgis_upload(imgurl) {
                 vinsert += '</a>';
             }
             if (!tinyMCE.activeEditor || tinyMCE.activeEditor.isHidden()) {
-                insertAtCaret('content', vinsert);
+                vgis_insertatcaret('content', vinsert);
             } else {
                 tinyMCE.activeEditor.execCommand('mceInsertContent', 0, vinsert);
             }

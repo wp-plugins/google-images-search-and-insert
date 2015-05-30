@@ -30,7 +30,7 @@ Note: To have full version with other feature as "Save to Media Library" and "Se
 
 == Screenshots ==
 
-1. "Google Images Library" button
+1. "Google Images" button
 1. Search images with powerfull options
 1. User searched image with many purposes
 1. Enjoy
@@ -42,6 +42,9 @@ Note: To have full version with other feature as "Save to Media Library" and "Se
 Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
+
+= 1.0.3 =
+* Fix some issues
 
 = 1.0.2 =
 * Compatible up to WordPress 4.2.2
