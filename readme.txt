@@ -43,6 +43,9 @@ Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
 
+= 1.0.4 =
+* Improve UI
+
 = 1.0.3 =
 * Fix some issues
 

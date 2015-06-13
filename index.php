@@ -3,7 +3,7 @@
   Plugin Name: Google Images Search And Insert
   Plugin URI: http://dunghv.com
   Description: This plugin help you search images on internet (powered by Google Images API) and insert to content or set featured image very quickly.
-  Version: 1.0.3
+  Version: 1.0.4
   Author: Baby2j
   Author URI: http://dunghv.com
  */
@@ -53,7 +53,6 @@ function vgis_admin_footer() {
             width: 100%;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #dedede;
             display: none;
         }
         .vgis-item span{
@@ -83,71 +82,80 @@ function vgis_admin_footer() {
         }
         .vgis-item:hover > .vgis-item-overlay{display: block}
         .vgis-item:hover > .vgis-item-link{display: block}
+        .vgis-item-single{
+            width: 100%;
+            height: 254px;
+            text-align: center;
+        }
         .vgis-loading{display: inline-block; height: 20px; line-height: 20px; min-width:20px; padding-left: 25px; background: url("<?php echo plugin_dir_url(__FILE__) . 'images/spinner.gif'; ?>") no-repeat;}
     </style>
     <div style='display:none'>
-        <div id="vgis_popup" style="width: 640px; height: 600px; padding: 10px; overflow: hidden">
-            <select name="vgisimgsz" id="vgisimgsz" style="float:left">
-                <option value="">All size</option>
-                <option value="icon">icon</option>
-                <option value="small">small</option>
-                <option value="medium">medium</option>
-                <option value="large">large</option>
-                <option value="xlarge">xlarge</option>
-                <option value="xxlarge">xxlarge</option>
-                <option value="huge">huge</option>
-            </select>
-            <select name="vgisimgtype" id="vgisimgtype" style="float:left">
-                <option value="">All type</option>
-                <option value="face">face</option>
-                <option value="photo">photo</option>
-                <option value="clipart">clipart</option>
-                <option value="lineart">lineart</option>
-            </select>
-            <select name="vgisfiletype" id="vgisfiletype" style="float:left">
-                <option value="">All file type</option>
-                <option value="jpg">jpg</option>
-                <option value="png">png</option>
-                <option value="gif">gif</option>
-                <option value="bmp">bmp</option>
-            </select> 
-            <select name="vgisimgc" id="vgisimgc" style="float:left">
-                <option value="">Colorization</option>
-                <option value="gray">gray</option>
-                <option value="color">color</option>
-            </select> 
-            <select name="vgisimgcolor" id="vgisimgcolor" style="float:left">
-                <option value="">All color</option>
-                <option value="black">black</option>
-                <option value="blue">blue</option>
-                <option value="brown">brown</option>
-                <option value="gray">gray</option>
-                <option value="green">green</option>
-                <option value="orange">orange</option>
-                <option value="pink">pink</option>
-                <option value="purple">purple</option>
-                <option value="red">red</option>
-                <option value="teal">teal</option>
-                <option value="white">white</option>
-                <option value="yellow">yellow</option>
-            </select> 
-            <select name="vgissafe" id="vgissafe" style="float:left">
-                <option value="">Safe search</option>
-                <option value="active">active</option>
-                <option value="moderate">moderate</option>
-                <option value="off">off</option>
-            </select> 
-            <div style="width:98%; display: inline-block; margin-top: 5px; height:28px; line-height: 28px;"><span style="float:left; margin-right: 10px;"><input name="vgiscc" id="vgiscc" type="checkbox"/> Only Creative Commons</span> <input type="text" id="vgisinput" name="vgisinput" value="" size="30"/> <input type="button" id="vgissearch" class="button" value="Search"/> <span id="vgisspinner" style="display:none" class="vgis-loading"> </span></div>
-            <div id="vgis-container" class="vgis-container"><br/><br/>WARNING: All images from Google Images (http://www.google.com/images) have reserved rights, so don't use images without license! Author of plugin are not liable for any damages arising from its use.</div>
-            <div id="vgis-page" class="vgis-page"></div>
-            <div id="vgis-use-image" class="vgis-use-image">
-                <div class="vgis-item" id="vgis-view" style="margin-right: 20px;"></div>
-                Title: <input type="text" id="vgis-title" size="42" value=""><br/><br/>
-                Width: <input type="text" id="vgis-width" size="8" value="0"> x Height: <input type="text" id="vgis-height" size="8" value="0"><br/><br/>
-                <input type="hidden" id="vgis-url" value="">
-                <input type="button" id="vgisinsert" class="button button-primary" value="Insert">
-                <a href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgisave" class="button button-disabled" value="Save & Insert"></a>
-                <a href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgifeatured" class="button button-disabled" value="Set Featured Image"></a>
+        <div id="vgis_popup" style="width: 940px; height: 420px; padding: 10px; overflow: hidden">
+            <div style="width: 640px;height: 420px; float: left">
+                <select name="vgisimgsz" id="vgisimgsz" style="float:left">
+                    <option value="">All size</option>
+                    <option value="icon">icon</option>
+                    <option value="small">small</option>
+                    <option value="medium">medium</option>
+                    <option value="large">large</option>
+                    <option value="xlarge">xlarge</option>
+                    <option value="xxlarge">xxlarge</option>
+                    <option value="huge">huge</option>
+                </select>
+                <select name="vgisimgtype" id="vgisimgtype" style="float:left">
+                    <option value="">All type</option>
+                    <option value="face">face</option>
+                    <option value="photo">photo</option>
+                    <option value="clipart">clipart</option>
+                    <option value="lineart">lineart</option>
+                </select>
+                <select name="vgisfiletype" id="vgisfiletype" style="float:left">
+                    <option value="">All file type</option>
+                    <option value="jpg">jpg</option>
+                    <option value="png">png</option>
+                    <option value="gif">gif</option>
+                    <option value="bmp">bmp</option>
+                </select> 
+                <select name="vgisimgc" id="vgisimgc" style="float:left">
+                    <option value="">Colorization</option>
+                    <option value="gray">gray</option>
+                    <option value="color">color</option>
+                </select> 
+                <select name="vgisimgcolor" id="vgisimgcolor" style="float:left">
+                    <option value="">All color</option>
+                    <option value="black">black</option>
+                    <option value="blue">blue</option>
+                    <option value="brown">brown</option>
+                    <option value="gray">gray</option>
+                    <option value="green">green</option>
+                    <option value="orange">orange</option>
+                    <option value="pink">pink</option>
+                    <option value="purple">purple</option>
+                    <option value="red">red</option>
+                    <option value="teal">teal</option>
+                    <option value="white">white</option>
+                    <option value="yellow">yellow</option>
+                </select> 
+                <select name="vgissafe" id="vgissafe" style="float:left">
+                    <option value="">Safe search</option>
+                    <option value="active">active</option>
+                    <option value="moderate">moderate</option>
+                    <option value="off">off</option>
+                </select> 
+                <div style="width:98%; display: inline-block; margin-top: 5px; height:28px; line-height: 28px;"><span style="float:left; margin-right: 10px;"><input name="vgiscc" id="vgiscc" type="checkbox"/> Only Creative Commons</span> <input type="text" id="vgisinput" name="vgisinput" value="" size="30"/> <input type="button" id="vgissearch" class="button" value="Search"/> <span id="vgisspinner" style="display:none" class="vgis-loading"> </span></div>
+                <div id="vgis-container" class="vgis-container"><br/><br/>WARNING: All images from Google Images (http://www.google.com/images) have reserved rights, so don't use images without license! Author of plugin are not liable for any damages arising from its use.</div>
+                <div id="vgis-page" class="vgis-page"></div>
+            </div>
+            <div style="width: 274px; height: 400px; float: right; padding: 10px; border-left: 1px solid #ddd;">
+                <div id="vgis-use-image" class="vgis-use-image">
+                    <div class="vgis-item-single" id="vgis-view"></div>
+                    Title <input type="text" id="vgis-title" style="width: 240px" value=""><br/><br/>
+                    Width <input type="text" id="vgis-width" size="8" value="0"> x Height <input type="text" id="vgis-height" size="8" value="0"><br/><br/>
+                    <input type="hidden" id="vgis-url" value="">
+                    <input type="button" id="vgisinsert" class="button button-primary" value="Insert"> &nbsp; 
+                    <a style="cursor: pointer" href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgisave" class="button button-disabled" value="Save & Insert"></a>
+                    <a style="cursor: pointer" href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgifeatured" class="button button-disabled" value="Set Featured"></a>
+                </div>
             </div>
         </div>
     </div>
@@ -189,7 +197,7 @@ function vgis_admin_footer() {
         jQuery("#vgissearch").click(function() {
             vgis_showimages(0);
         });
-        jQuery("#vgis-btn").colorbox({inline: true, scrolling: false, fixed: true, width: "670px"});
+        jQuery("#vgis-btn").colorbox({inline: true, scrolling: false, fixed: true, width: "664px", height: "465px"});
         jQuery("#vgis-page a").live("click", function() {
             vgis_showimages(jQuery(this).attr("rel") - 1);
         });
@@ -217,6 +225,7 @@ function vgis_admin_footer() {
             jQuery('#vgis_featured_url').val('');
         });
         jQuery(".vgis-item-use").live("click", function() {
+            jQuery.colorbox.resize({width: "960px", height: "465px"});
             jQuery("#vgis-use-image").show();
             jQuery('#vgis-title').val(jQuery(this).attr('vgistitle'));
             jQuery('#vgis-width').val(jQuery(this).attr('vgiswidth'));
