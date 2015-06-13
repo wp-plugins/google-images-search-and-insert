@@ -153,8 +153,8 @@ function vgis_admin_footer() {
                     Width <input type="text" id="vgis-width" size="8" value="0"> x Height <input type="text" id="vgis-height" size="8" value="0"><br/><br/>
                     <input type="hidden" id="vgis-url" value="">
                     <input type="button" id="vgisinsert" class="button button-primary" value="Insert"> &nbsp; 
-                    <a style="cursor: pointer" href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgisave" class="button button-disabled" value="Save & Insert"></a>
-                    <a style="cursor: pointer" href="http://dunghv.com" title="Only available in full version!" target="_blank"><input type="button" id="vgifeatured" class="button button-disabled" value="Set Featured"></a>
+                    <a class="skip button-secondary" href="http://dunghv.com/downloads/wordpress-google-images-search-and-insert" title="Only available in full version!" target="_blank">Save & Insert</a>
+                    <a class="skip button-secondary" href="http://dunghv.com/downloads/wordpress-google-images-search-and-insert" title="Only available in full version!" target="_blank">Set Featured</a>
                 </div>
             </div>
         </div>
