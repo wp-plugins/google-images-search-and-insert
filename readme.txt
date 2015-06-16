@@ -1,7 +1,7 @@
 === Google Images Search And Insert ===
 Contributors: baby2j
-Donate link: http://dunghv.com
-Tags: google images, google search, wordpress google images, google library, google images api
+Donate link: http://dunghv.com/downloads/wordpress-google-images-search-and-insert
+Tags: google image, google images, google photo, google photos, google search, wordpress google images, google library, google images api
 Requires at least: 3.5
 Tested up to: 4.2.2
 Stable tag: trunk
