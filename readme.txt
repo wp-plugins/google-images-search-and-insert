@@ -17,9 +17,11 @@ This plugin help you search images on internet (powered by Google Images API) an
 Feature:
 
 - Search images and insert to content
-- Change title and size before insert
+- Change title and size
+- Add caption
+- Set featured image
 
-Note: To have full version with other feature as "Save to Media Library" and "Set Featured Image", please go to http://dunghv.com
+Note: To have full version with "Save to Media Library" feature, please go to http://dunghv.com
 
 == Installation ==
 
@@ -42,6 +44,9 @@ Note: To have full version with other feature as "Save to Media Library" and "Se
 Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
+
+= 2.0 =
+* Included "Set Featured Image" feature
 
 = 1.0.4 =
 * Improve UI

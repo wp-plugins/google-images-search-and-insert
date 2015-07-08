@@ -3,28 +3,91 @@
   Plugin Name: Google Images Search And Insert
   Plugin URI: http://dunghv.com
   Description: This plugin help you search images on internet (powered by Google Images API) and insert to content or set featured image very quickly.
-  Version: 1.0.4
+  Version: 2.0
   Author: Baby2j
   Author URI: http://dunghv.com
  */
 
-add_action('admin_enqueue_scripts', 'vgis_enqueue');
-
-function vgis_enqueue($hook) {
-    wp_enqueue_script('colorbox', plugin_dir_url(__FILE__) . '/js/jquery.colorbox.js', array('jquery'));
-    wp_enqueue_style('colorbox', plugins_url('css/colorbox.css', __FILE__));
-}
-
 add_action('media_buttons_context', 'vgis_add_button');
 
 function vgis_add_button($context) {
-    $context .= '<a href="#vgis_popup" id="vgis-btn" class="button add_media" title="Google Images"><span class="wp-media-buttons-icon"></span> Google Images</a><input type="hidden" id="vgis_featured_url" name="vgis_featured_url" value="" />';
+    $context .= '<a href="#vgis_popup" id="vgis-btn" class="button add_media" title="Google Image"><span class="vgis-buttons-icon"></span> Google Image</a><input type="hidden" id="vgis_featured_url" name="vgis_featured_url" value="" />';
     return $context;
 }
 
-add_action('admin_footer', 'vgis_admin_footer');
+add_action('admin_footer', 'vgis_add_inline_popup_content');
 
-function vgis_admin_footer() {
+function vgis_enqueue($hook) {
+    if (('edit.php' != $hook) && ('post-new.php' != $hook) && ('post.php' != $hook))
+        return;
+    wp_enqueue_script('colorbox', plugin_dir_url(__FILE__) . 'js/jquery.colorbox.js', array('jquery'));
+    wp_enqueue_style('colorbox', plugins_url('css/colorbox.css', __FILE__));
+}
+
+add_action('admin_enqueue_scripts', 'vgis_enqueue');
+
+add_action('save_post', 'vgis_save_postdata');
+
+function vgis_save_postdata($post_id) {
+    if (!empty($_POST['vgis_featured_url'])) {
+        if (strstr($_SERVER['REQUEST_URI'], 'wp-admin/post-new.php') || strstr($_SERVER['REQUEST_URI'], 'wp-admin/post.php')) {
+            if ('page' == $_POST['post_type']) {
+                if (!current_user_can('edit_page', $post_id))
+                    return;
+            } else {
+                if (!current_user_can('edit_post', $post_id))
+                    return;
+            }
+            $vgisfurl = sanitize_text_field($_POST['vgis_featured_url']);
+            vgis_save_featured($vgisfurl);
+        }
+    }
+}
+
+function vgis_save_featured($vurl) {
+    global $post;
+    $filename = pathinfo($vurl, PATHINFO_FILENAME);
+    if (vgis_search_in_media($filename) > 0) {
+        set_post_thumbnail($post, vgis_search_in_media_id($filename));
+    } else {
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        @set_time_limit(300);
+        if (!empty($vurl)) {
+            $tmp = download_url($vurl);
+            $ext = pathinfo($vurl, PATHINFO_EXTENSION);
+            $file_array['name'] = $filename . '.' . $ext;
+            $file_array['tmp_name'] = $tmp;
+            if (is_wp_error($tmp)) {
+                @unlink($file_array['tmp_name']);
+                $file_array['tmp_name'] = '';
+            }
+            $thumbid = media_handle_sideload($file_array, $post->ID, $desc);
+            if (is_wp_error($thumbid)) {
+                @unlink($file_array['tmp_name']);
+                return $thumbid;
+            }
+        }
+        set_post_thumbnail($post, $thumbid);
+    }
+}
+
+function vgis_search_in_media($file_url) {
+    global $wpdb;
+    $filename = basename($file_url);
+    $rows = $wpdb->get_var("SELECT COUNT(*) FROM wp_postmeta WHERE wp_postmeta.meta_key = '_wp_attached_file' AND wp_postmeta.meta_value LIKE '%" . like_escape($filename) . "%'");
+    return $rows;
+}
+
+function vgis_search_in_media_id($file_url) {
+    global $wpdb;
+    $filename = basename($file_url);
+    $rows = $wpdb->get_row("SELECT post_id FROM wp_postmeta WHERE wp_postmeta.meta_key = '_wp_attached_file' AND wp_postmeta.meta_value LIKE '%" . like_escape($filename) . "%'");
+
+    return $rows->post_id;
+}
+
+function vgis_add_inline_popup_content() {
     ?>
     <style>
         .vgis-container{
@@ -51,8 +114,6 @@ function vgis_admin_footer() {
         }
         .vgis-use-image{
             width: 100%;
-            margin-top: 15px;
-            padding-top: 15px;
             display: none;
         }
         .vgis-item span{
@@ -80,18 +141,28 @@ function vgis_admin_footer() {
             width: 90px;
             font-size: 12px;
         }
+        p.vgis-p{margin:0 0 5px 0}
         .vgis-item:hover > .vgis-item-overlay{display: block}
         .vgis-item:hover > .vgis-item-link{display: block}
         .vgis-item-single{
             width: 100%;
-            height: 254px;
+            height: 94px;
+            overflow: hidden;
             text-align: center;
         }
-        .vgis-loading{display: inline-block; height: 20px; line-height: 20px; min-width:20px; padding-left: 25px; background: url("<?php echo plugin_dir_url(__FILE__) . 'images/spinner.gif'; ?>") no-repeat;}
+        .vgis-loading{display: inline-block; height: 20px; line-height: 20px; min-width:20px; padding-left: 25px; background: url("<?php echo plugin_dir_url(__FILE__) . '/images/loading.gif'; ?>") no-repeat;}
+        .vgis-buttons-icon {
+            width: 18px;
+            height: 18px;
+            background: url(<?php echo plugin_dir_url(__FILE__); ?>images/vgis-18.png) no-repeat;
+            display: inline-block;
+            vertical-align: text-top;
+            margin: 0 2px;
+        }
     </style>
     <div style='display:none'>
-        <div id="vgis_popup" style="width: 940px; height: 420px; padding: 10px; overflow: hidden">
-            <div style="width: 640px;height: 420px; float: left">
+        <div id="vgis_popup" style="width: 950px; height: 440px; position: relative; overflow: hidden">
+            <div style="width: 640px;height: 420px; float: left; padding: 10px 0 10px 10px;">
                 <select name="vgisimgsz" id="vgisimgsz" style="float:left">
                     <option value="">All size</option>
                     <option value="icon">icon</option>
@@ -146,15 +217,31 @@ function vgis_admin_footer() {
                 <div id="vgis-container" class="vgis-container"><br/><br/>WARNING: All images from Google Images (http://www.google.com/images) have reserved rights, so don't use images without license! Author of plugin are not liable for any damages arising from its use.</div>
                 <div id="vgis-page" class="vgis-page"></div>
             </div>
-            <div style="width: 274px; height: 400px; float: right; padding: 10px; border-left: 1px solid #ddd;">
+            <div style="width: 274px; height: 420px; position: absolute; top: 0; right: 0; padding: 10px; border-left: 1px solid #ddd;background: #fcfcfc;">
                 <div id="vgis-use-image" class="vgis-use-image">
-                    <div class="vgis-item-single" id="vgis-view"></div>
-                    Title <input type="text" id="vgis-title" style="width: 240px" value=""><br/><br/>
-                    Width <input type="text" id="vgis-width" size="8" value="0"> x Height <input type="text" id="vgis-height" size="8" value="0"><br/><br/>
-                    <input type="hidden" id="vgis-url" value="">
-                    <input type="button" id="vgisinsert" class="button button-primary" value="Insert"> &nbsp; 
-                    <a class="skip button-secondary" href="http://dunghv.com/downloads/wordpress-google-images-search-and-insert" title="Only available in full version!" target="_blank">Save & Insert</a>
-                    <a class="skip button-secondary" href="http://dunghv.com/downloads/wordpress-google-images-search-and-insert" title="Only available in full version!" target="_blank">Set Featured</a>
+                    <div class="vgis-item-single" id="vgis-view" style="margin-right: 20px;"></div>
+                    <p class="vgis-p">Title <input type="text" id="vgis-title" style="width: 240px" value=""></p>
+                    <p class="vgis-p">Caption <textarea id="vgis-caption" name="vgis-caption" style="width:220px;"></textarea></p>
+                    <p class="vgis-p">File name <select name="vgis-filename" id="vgis-filename">
+                            <option value="0">Keep original file name</option>
+                            <option value="1">Generate from title</option>
+                        </select></p>
+                    <p class="vgis-p">Width <input type="text" id="vgis-width" size="8" value="0"> x Height <input type="text" id="vgis-height" size="8" value="0"></p>
+                    <p class="vgis-p">Alignment <select name="vgisalign" id="vgisalign">
+                            <option value="alignnone">None</option>
+                            <option value="alignleft">Left</option>
+                            <option value="alignright">Right</option>
+                            <option value="aligncenter">Center</option>
+                        </select></p>
+                    <p class="vgis-p">Link to <select name="vgislink" id="vgislink">
+                            <option value="0">None</option>
+                            <option value="1">Original site</option>
+                            <option value="2">Original image</option>
+                        </select></p>
+                    <p class="vgis-p"><input name="vgisblank" id="vgisblank" type="checkbox"/> Open new windows &nbsp; <input name="vgisnofollow" id="vgisnofollow" type="checkbox"/> Rel nofollow</p>
+                    <p class="vgis-p" style="margin-top: 20px;"><input type="hidden" id="vgis-site" value=""><input type="hidden" id="vgis-url" value="">
+                        <input type="button" id="vgisinsert" class="button button-primary" value="Insert"> <a class="skip button-secondary" href="javascript:void(0);" onclick="javascript:alert('Buy full version to use this feature!\nPlease goto http://dunghv.com');" title="Only available in full version!" target="_blank">Save & Insert</a> <input type="button" id="vgisfeatured" class="button button-primary" value="Set Featured"></p>
+                    <div style="display:inline-block"><span class="vgis-loading" id="vgisnote" style="display:none">Saving image to Media Library...</span> <span id="vgiserror"></span></div>
                 </div>
             </div>
         </div>
@@ -203,7 +290,38 @@ function vgis_admin_footer() {
         });
         jQuery("#vgisinsert").live("click", function() {
             if (jQuery('#vgis-url').val() != '') {
-                vinsert = '<img src="' + jQuery('#vgis-url').val() + '" width="' + jQuery('#vgis-width').val() + '" height="' + jQuery('#vgis-height').val() + '" title="' + jQuery('#vgis-title').val() + '" alt="' + jQuery('#vgis-title').val() + '"/>';
+                vinsert = '';
+                valign = '';
+                valign2 = '';
+                if (jQuery('#vgisalign').val() != '') {
+                    valign = ' align="' + jQuery('#vgisalign').val() + '"';
+                    valign2 = ' class="' + jQuery('#vgisalign').val() + '"';
+                }
+                if (jQuery('textarea#vgis-caption').val() != '') {
+                    vinsert = '[caption id="" ' + valign + ']';
+                }
+                if (jQuery('#vgislink').val() == 1) {
+                    vinsert += '<a href="' + jQuery('#vgis-site').val() + '" title="' + jQuery('#vgis-title').val() + '"';
+                }
+                if (jQuery('#vgislink').val() == 2) {
+                    vinsert += '<a href="' + jQuery('#vgis-url').val() + '" title="' + jQuery('#vgis-title').val() + '"';
+                }
+                if (jQuery('#vgisblank').is(':checked')) {
+                    vinsert += ' target="_blank"';
+                }
+                if (jQuery('#vgisnofollow').is(':checked')) {
+                    vinsert += ' rel="nofollow"';
+                }
+                if (jQuery('#vgislink').val() != 0) {
+                    vinsert += '>';
+                }
+                vinsert += '<img ' + valign2 + ' src="' + jQuery('#vgis-url').val() + '" width="' + jQuery('#vgis-width').val() + '" height="' + jQuery('#vgis-height').val() + '" title="' + jQuery('#vgis-title').val() + '" alt="' + jQuery('#vgis-title').val() + '"/>';
+                if (jQuery('#vgislink').val() != 0) {
+                    vinsert += '</a>';
+                }
+                if (jQuery('textarea#vgis-caption').val() != '') {
+                    vinsert += ' ' + jQuery('textarea#vgis-caption').val() + '[/caption]';
+                }
                 if (!tinyMCE.activeEditor || tinyMCE.activeEditor.isHidden()) {
                     vgis_insertatcaret('content', vinsert);
                 } else {
@@ -228,10 +346,13 @@ function vgis_admin_footer() {
             jQuery.colorbox.resize({width: "960px", height: "465px"});
             jQuery("#vgis-use-image").show();
             jQuery('#vgis-title').val(jQuery(this).attr('vgistitle'));
+            jQuery('#vgis-caption').val('');
             jQuery('#vgis-width').val(jQuery(this).attr('vgiswidth'));
             jQuery('#vgis-height').val(jQuery(this).attr('vgisheight'));
+            jQuery('#vgis-site').val(jQuery(this).attr('vgissite'));
             jQuery('#vgis-url').val(jQuery(this).attr('vgisurl'));
             jQuery('#vgis-view').html('<img src="' + jQuery(this).attr('vgistburl') + '"/>');
+            jQuery('#vgiserror').html('');
         });
         function vgis_showimages(page) {
             if (jQuery("#vgisinput").val() == '') {
@@ -252,12 +373,12 @@ function vgis_admin_footer() {
                         if (data.responseDetails === null) {
                             jQuery('#vgisspinner').hide();
                             for (var i = 0; i < data.responseData.results.length; i++) {
-                                jQuery('#vgis-container').append('<div class="vgis-item"><div class="vgis-item-link"><a href="' + data.responseData.results[i].url + '" target="_blank" title="View this image in new windows">View</a><a class="vgis-item-use" vgistburl="' + data.responseData.results[i].tbUrl + '" vgisurl="' + data.responseData.results[i].url + '" vgisthumb="' + data.responseData.results[i].tbUrl + '" vgistitle="' + data.responseData.results[i].titleNoFormatting + '" vgiswidth="' + data.responseData.results[i].width + '" vgisheight="' + data.responseData.results[i].height + '" href="javascript: void(0);">Use this image</a></div><div class="vgis-item-overlay"></div><img src="' + data.responseData.results[i].tbUrl + '"><span>' + data.responseData.results[i].width + ' x ' + data.responseData.results[i].height + '</span></div> ');
+                                jQuery('#vgis-container').append('<div class="vgis-item"><div class="vgis-item-link"><a href="' + data.responseData.results[i].url + '" target="_blank" title="View this image in new windows">View</a><a class="vgis-item-use" vgistburl="' + data.responseData.results[i].tbUrl + '" vgissite="' + data.responseData.results[i].originalContextUrl + '" vgisurl="' + data.responseData.results[i].url + '" vgisthumb="' + data.responseData.results[i].tbUrl + '" vgistitle="' + data.responseData.results[i].titleNoFormatting + '" vgiswidth="' + data.responseData.results[i].width + '" vgisheight="' + data.responseData.results[i].height + '" href="javascript: void (0);">Use this image</a></div><div class="vgis-item-overlay"></div><img src="' + data.responseData.results[i].tbUrl + '"><span>' + data.responseData.results[i].width + ' x ' + data.responseData.results[i].height + '</span></div> ');
                             }
                             ;
                             var vpages = "About " + data.responseData.cursor.resultCount + " results / Pages: ";
                             for (var j = 1; j < data.responseData.cursor.pages.length + 1; j++) {
-                                vpages += '<a href="javascript: void(0);" rel="' + j + '" title="Page ' + j + '">' + j + '</a> ';
+                                vpages += '<a href="javascript: void (0);" rel="' + j + '" title="Page ' + j + '">' + j + '</a> ';
                             }
                             ;
                             jQuery('#vgis-page').html(vpages);
