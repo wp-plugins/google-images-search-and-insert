@@ -45,6 +45,9 @@ Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
 
+= 2.1 =
+* Optimized code
+
 = 2.0 =
 * Included "Set Featured Image" feature
 
