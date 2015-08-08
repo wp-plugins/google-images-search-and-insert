@@ -3,7 +3,7 @@ Contributors: baby2j
 Donate link: http://dunghv.com/downloads/wordpress-google-images-search-and-insert
 Tags: google image, google images, google photo, google photos, google search, wordpress google images, google library, google images api
 Requires at least: 3.5
-Tested up to: 4.2.2
+Tested up to: 4.2.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,6 +44,9 @@ Note: To have full version with "Save to Media Library" feature, please go to ht
 Visit [plugin documentation website](http://dunghv.com "plugin documentation")
 
 == Changelog ==
+
+= 2.2 =
+* Improve UI
 
 = 2.1 =
 * Optimized code
